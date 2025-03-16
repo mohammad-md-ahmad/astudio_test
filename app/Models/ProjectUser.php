@@ -10,6 +10,8 @@ class ProjectUser extends Model
     /** @use HasFactory<\Database\Factories\ProjectUserFactory> */
     use HasFactory;
 
+    protected $table = 'projects_users';
+
     /**
      * The attributes that are mass assignable.
      *

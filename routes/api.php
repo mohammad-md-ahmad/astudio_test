@@ -3,6 +3,7 @@
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -22,12 +23,19 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/users/{user}', 'delete')->name('delete');
     });
 
-    Route::controller(ProjectController::class)->name('projects.')->group(function () {
-        Route::get('/projects/{project}', 'get')->name('get');
-        Route::get('/projects', 'getAll')->name('get-all');
-        Route::post('/projects', 'create')->name('create');
-        Route::put('/projects/{project}', 'update')->name('update');
-        Route::delete('/projects/{project}', 'delete')->name('delete');
+    Route::controller(ProjectController::class)->name('projects.')->prefix('/projects')->group(function () {
+        Route::get('/{project}', 'get')->name('get');
+        Route::get('/', 'getAll')->name('get-all');
+        Route::post('/', 'create')->name('create');
+        Route::put('/{project}', 'update')->name('update');
+        Route::delete('/{project}', 'delete')->name('delete');
+
+        Route::controller(ProjectUserController::class)->name('users.')->group(function () {
+            Route::get('/{project}/users', 'get')->name('get');
+            Route::get('/users', 'getAll')->name('get-all');
+            Route::post('/{project}/users', 'create')->name('create');
+            Route::delete('/{project}/users', 'delete')->name('delete');
+        });
     });
 
     Route::controller(TimesheetController::class)->name('timesheets.')->group(function () {
