@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,5 +27,13 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/projects', 'create')->name('create');
         Route::put('/projects/{project}', 'update')->name('update');
         Route::delete('/projects/{project}', 'delete')->name('delete');
+    });
+
+    Route::controller(TimesheetController::class)->name('timesheets.')->group(function () {
+        Route::get('/timesheets/{timesheet}', 'get')->name('get');
+        Route::get('/timesheets', 'getAll')->name('get-all');
+        Route::post('/timesheets', 'create')->name('create');
+        Route::put('/timesheets/{timesheet}', 'update')->name('update');
+        Route::delete('/timesheets/{timesheet}', 'delete')->name('delete');
     });
 });
