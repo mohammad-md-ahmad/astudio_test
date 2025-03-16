@@ -21,11 +21,12 @@ class ProjectController extends Controller
     public function get(Project $project): JsonResponse
     {
         try {
-            $data = $this->projectService->get($project);
+            /** @var Project $project */
+            $project = $this->projectService->get($project);
 
             return response()->json([
                 'message' => trans('Project has been retrieved successfully!'),
-                'data' => $data->toArray(),
+                'data' => $project->toArray(),
             ], Response::HTTP_CREATED);
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
@@ -71,6 +72,7 @@ class ProjectController extends Controller
     public function update(UpdateProjectRequest $request, Project $project): JsonResponse
     {
         try {
+            /** @var Project $project */
             $project = $this->projectService->update($request, $project);
 
             return response()->json([

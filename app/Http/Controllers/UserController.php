@@ -21,11 +21,12 @@ class UserController extends Controller
     public function get(User $user): JsonResponse
     {
         try {
-            $data = $this->userService->get($user);
+            /** @var User $user */
+            $user = $this->userService->get($user);
 
             return response()->json([
                 'message' => trans('User has been retrieved successfully!'),
-                'data' => $data->toArray(),
+                'data' => $user->toArray(),
             ], Response::HTTP_CREATED);
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
