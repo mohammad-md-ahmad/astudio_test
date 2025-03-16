@@ -10,4 +10,14 @@ enum AttributeType
     case Date;
     case Number;
     case Select;
+
+    public static function toArray(): array
+    {
+        return [
+            self::Text->name,
+            self::Date->name,
+            self::Number->name,
+            self::Select->name,
+        ];
+    }
 }

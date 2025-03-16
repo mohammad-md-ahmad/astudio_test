@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TimesheetController;
@@ -35,5 +36,13 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/timesheets', 'create')->name('create');
         Route::put('/timesheets/{timesheet}', 'update')->name('update');
         Route::delete('/timesheets/{timesheet}', 'delete')->name('delete');
+    });
+
+    Route::controller(AttributeController::class)->name('attributes.')->group(function () {
+        Route::get('/attributes/{attribute}', 'get')->name('get');
+        Route::get('/attributes', 'getAll')->name('get-all');
+        Route::post('/attributes', 'create')->name('create');
+        Route::put('/attributes/{attribute}', 'update')->name('update');
+        Route::delete('/attributes/{attribute}', 'delete')->name('delete');
     });
 });

@@ -2,13 +2,16 @@
 
 namespace App\Providers;
 
+use App\Contracts\AttributeServiceInterface;
 use App\Contracts\AuthServiceInterface;
 use App\Contracts\ProjectServiceInterface;
 use App\Contracts\TimesheetServiceInterface;
 use App\Contracts\UserServiceInterface;
+use App\Models\Attribute;
 use App\Models\Project;
 use App\Models\Timesheet;
 use App\Models\User;
+use App\Services\AttributeService;
 use App\Services\AuthService;
 use App\Services\ProjectService;
 use App\Services\TimesheetService;
@@ -28,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         app()->bind(UserServiceInterface::class, UserService::class);
         app()->bind(ProjectServiceInterface::class, ProjectService::class);
         app()->bind(TimesheetServiceInterface::class, TimesheetService::class);
+        app()->bind(AttributeServiceInterface::class, AttributeService::class);
     }
 
     /**
@@ -39,8 +43,10 @@ class AppServiceProvider extends ServiceProvider
             return Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised();
         });
 
+        // explicitly binding route parameters to models
         Route::model('user', User::class);
         Route::model('project', Project::class);
         Route::model('timesheet', Timesheet::class);
+        Route::model('attribute', Attribute::class);
     }
 }
