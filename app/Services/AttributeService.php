@@ -6,9 +6,12 @@ namespace App\Services;
 
 use App\Contracts\AttributeServiceInterface;
 use App\Http\Requests\Attributes\CreateAttributeRequest;
+use App\Http\Requests\Attributes\SetAttributeValueRequest;
 use App\Http\Requests\Attributes\UpdateAttributeRequest;
 use App\Models\Attribute;
+use App\Models\AttributeValue;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -75,6 +78,34 @@ class AttributeService implements AttributeServiceInterface
             $attribute->values()->delete();
 
             return $attribute->delete();
+        } catch (Exception $e) {
+            Log::error($e->getMessage(), $e->getTrace());
+
+            throw $e;
+        }
+    }
+
+    public function setAttributeValue(SetAttributeValueRequest $request): bool
+    {
+        try {
+            $attribute = Attribute::where('name', $request->name)->first();
+
+            if ($attribute) {
+                return DB::transaction(function () use ($request, $attribute) {
+                    AttributeValue::updateOrCreate(
+                        [
+                            'attribute_id' => $attribute->id,
+                            'entity_id' => $request->entity_id,
+                            'entity_type' => $request->entity_type,
+                        ],
+                        ['value' => $request->value]
+                    );
+
+                    return true;
+                });
+            }
+
+            throw new ModelNotFoundException;
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
 
