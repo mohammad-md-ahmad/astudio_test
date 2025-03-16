@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ProjectStatus;
+use App\Traits\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Project extends Model
 {
     /** @use HasFactory<\Database\Factories\ProjectFactory> */
-    use HasFactory;
+    use Filterable, HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +21,16 @@ class Project extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'name',
+        'status',
+    ];
+
+    /**
+     * The regular attributes for filtering
+     *
+     * @return array<string, string>
+     */
+    protected array $filterableColumns = [
         'name',
         'status',
     ];

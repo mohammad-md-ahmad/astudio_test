@@ -25,7 +25,7 @@ class ProjectService implements ProjectServiceInterface
     public function get(Project $project): Project
     {
         try {
-            return $project->load('attributes');
+            return $project->load('attributes.attribute');
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
 
@@ -36,9 +36,9 @@ class ProjectService implements ProjectServiceInterface
     public function getAll(Request $request): Collection
     {
         try {
-            return Project::all();
+            return Project::with('attributes.attribute')->filter($request)->get();
         } catch (Exception $e) {
-            Log::error($e->getMessage(), $e->getTrace());
+            Log::error($e->getMessage());
 
             throw $e;
         }
@@ -56,7 +56,7 @@ class ProjectService implements ProjectServiceInterface
                     $this->setAttributeValues($project, $request->input('attributes'));
                 }
 
-                return $project->load('attributes');
+                return $project->load('attributes.attribute');
             });
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
@@ -76,7 +76,7 @@ class ProjectService implements ProjectServiceInterface
                     $this->setAttributeValues($project, $request->input('attributes'));
                 }
 
-                return $project->load('attributes');
+                return $project->load('attributes.attribute');
             });
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
