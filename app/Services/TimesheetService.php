@@ -58,10 +58,12 @@ class TimesheetService implements TimesheetServiceInterface
     public function update(UpdateTimesheetRequest $request, Timesheet $timesheet): Timesheet
     {
         try {
-            $timesheet->fill($request->only($timesheet->getFillable()));
-            $timesheet->save();
+            return DB::transaction(function () use ($request, $timesheet) {
+                $timesheet->fill($request->only($timesheet->getFillable()));
+                $timesheet->save();
 
-            return $timesheet;
+                return $timesheet;
+            });
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
 
@@ -72,7 +74,9 @@ class TimesheetService implements TimesheetServiceInterface
     public function delete(Timesheet $timesheet): bool
     {
         try {
-            return $timesheet->delete();
+            return DB::transaction(function () use ($timesheet) {
+                return $timesheet->delete();
+            });
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
 

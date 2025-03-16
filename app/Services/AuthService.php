@@ -48,17 +48,20 @@ class AuthService implements AuthServiceInterface
             if (Auth::attempt($request->all())) {
                 /** @var User $user */
                 $user = Auth::user();
-                $user->tokens->each(function (Token|TransientToken $token) {
-                    $token->revoke();
+
+                return DB::transaction(function () use ($user) {
+                    $user->tokens->each(function (Token|TransientToken $token) {
+                        $token->revoke();
+                    });
+                    $user->token();
+
+                    $token = $user->createToken('apiAccessToken')->accessToken;
+
+                    return [
+                        'token' => $token,
+                        'user' => $user,
+                    ];
                 });
-                $user->token();
-
-                $token = $user->createToken('apiAccessToken')->accessToken;
-
-                return [
-                    'token' => $token,
-                    'user' => $user,
-                ];
             }
 
             throw new AuthenticationException;
@@ -75,7 +78,9 @@ class AuthService implements AuthServiceInterface
             /** @var User $user */
             $user = Auth::user();
 
-            return $user->token()->revoke();
+            return DB::transaction(function () use ($user) {
+                return $user->token()->revoke();
+            });
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
 

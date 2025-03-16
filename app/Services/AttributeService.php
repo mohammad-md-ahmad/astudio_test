@@ -61,10 +61,12 @@ class AttributeService implements AttributeServiceInterface
     public function update(UpdateAttributeRequest $request, Attribute $attribute): Attribute
     {
         try {
-            $attribute->fill($request->only($attribute->getFillable()));
-            $attribute->save();
+            return DB::transaction(function () use ($request, $attribute) {
+                $attribute->fill($request->only($attribute->getFillable()));
+                $attribute->save();
 
-            return $attribute;
+                return $attribute;
+            });
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
 
@@ -75,9 +77,11 @@ class AttributeService implements AttributeServiceInterface
     public function delete(Attribute $attribute): bool
     {
         try {
-            $attribute->values()->delete();
+            return DB::transaction(function () use ($attribute) {
+                $attribute->values()->delete();
 
-            return $attribute->delete();
+                return $attribute->delete();
+            });
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
 

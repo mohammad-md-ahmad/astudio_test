@@ -60,10 +60,12 @@ class UserService implements UserServiceInterface
     public function update(UpdateUserRequest $request, User $user): User
     {
         try {
-            $user->fill($request->only($user->getFillable()));
-            $user->save();
+            return DB::transaction(function () use ($request, $user) {
+                $user->fill($request->only($user->getFillable()));
+                $user->save();
 
-            return $user;
+                return $user;
+            });
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
 
@@ -74,13 +76,15 @@ class UserService implements UserServiceInterface
     public function delete(User $user): bool
     {
         try {
-            $user->tokens->each(function (Token|TransientToken $token) {
-                $token->revoke();
-            });
-            $user->projects()->detach();
-            $user->timesheets()->delete();
+            return DB::transaction(function () use ($user) {
+                $user->tokens->each(function (Token|TransientToken $token) {
+                    $token->revoke();
+                });
+                $user->projects()->detach();
+                $user->timesheets()->delete();
 
-            return $user->delete();
+                return $user->delete();
+            });
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
 
