@@ -71,10 +71,12 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
         try {
-            $this->userService->update($request, $user);
+            /** @var User $user */
+            $user = $this->userService->update($request, $user);
 
             return response()->json([
                 'message' => trans('User has been updated successfully!'),
+                'data' => $user->toArray(),
             ], Response::HTTP_OK);
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
