@@ -4,7 +4,7 @@
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/mohammad-md-ahmad/astudio_test.git
    ```
 
 2. Install dependencies:
