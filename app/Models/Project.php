@@ -52,7 +52,7 @@ class Project extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'projects_users');
+        return $this->belongsToMany(User::class, 'project_users');
     }
 
     /**

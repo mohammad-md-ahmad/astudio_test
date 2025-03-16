@@ -11,7 +11,7 @@ use App\Http\Requests\ProjectUsers\DeleteProjectUserRequest;
 use App\Models\Project;
 use App\Models\ProjectUser;
 use Exception;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;

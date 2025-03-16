@@ -27,7 +27,7 @@ class DeleteProjectUserRequest extends FormRequest
         $project = request()->route()->parameter('project');
 
         return [
-            'user_id' => ['required', Rule::exists('projects_users')->where(function (Builder $query) use ($project) {
+            'user_id' => ['required', Rule::exists('project_users')->where(function (Builder $query) use ($project) {
                 $query->where('project_id', $project->id)
                     ->where('user_id', $this->input('user_id'));
             })],
