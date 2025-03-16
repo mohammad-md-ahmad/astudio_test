@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,5 +18,13 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/users', 'create')->name('create');
         Route::put('/users/{user}', 'update')->name('update');
         Route::delete('/users/{user}', 'delete')->name('delete');
+    });
+
+    Route::controller(ProjectController::class)->name('projects.')->group(function () {
+        Route::get('/projects/{project}', 'get')->name('get');
+        Route::get('/projects', 'getAll')->name('get-all');
+        Route::post('/projects', 'create')->name('create');
+        Route::put('/projects/{project}', 'update')->name('update');
+        Route::delete('/projects/{project}', 'delete')->name('delete');
     });
 });
