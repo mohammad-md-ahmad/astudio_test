@@ -23,15 +23,15 @@ trait Filterable
                     $query->where($attributeName, $operator, $value);
                 } else {
                     // EAV attribute filtering
-                    $query->whereHas('attributes', function ($q) use ($attributeName, $operator, $value) {
-                        $q->whereHas('attribute', function ($subQ) use ($attributeName) {
+                    $query->whereHas('attributes', function (Builder $query) use ($attributeName, $operator, $value) {
+                        $query->whereHas('attribute', function ($subQ) use ($attributeName) {
                             $subQ->where('name', $attributeName);
                         });
 
                         if ($operator === 'LIKE') {
-                            $q->where('value', 'LIKE', "%$value%");
+                            $query->where('value', 'LIKE', "%$value%");
                         } else {
-                            $q->where('value', $operator, $value);
+                            $query->where('value', $operator, $value);
                         }
                     });
                 }
