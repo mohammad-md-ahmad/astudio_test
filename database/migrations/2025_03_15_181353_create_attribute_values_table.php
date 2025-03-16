@@ -17,6 +17,8 @@ return new class extends Migration
             $table->morphs('entity');
             $table->text('value');
             $table->timestamps();
+
+            $table->unique(['attribute_id', 'entity_id', 'entity_type']);
         });
     }
 
